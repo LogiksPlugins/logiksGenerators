@@ -55,9 +55,14 @@ function reloadPage() {
 }
 function generateOutput() {
     qData = $("#generatorForm").serialize();
-    $("#contentArea").html("<p>Generating "+$("#sidebarArea .active").data("src")+"</p>");
-    processAJAXPostQuery(_service("logiksGenerators","generate"), qData, function(ans) {
-        $("#contentArea").html(ans.Data);
-    });
+    $("#contentArea").html("<h3 align=center>Generating "+$("#sidebarArea .active").data("src")+"</h3><div class='text-center'><i class='fa fa-spinner fa-spin fa-2x'></i></div>");
+    processAJAXPostQuery(_service("logiksGenerators","generate"), qData, function(ansData) {
+        if(ansData.Data.status == "ok") {
+          $("#contentArea").html("<h3 align=center>Generating is complete, please refresh sidebar.</h3>");
+        } else {
+          if(ansData.Data.msg==null || ansData.Data.msg.length<=0) ansData.Data.msg = "Error generating source code"; 
+          $("#contentArea").html("<h3 align=center>"+ansData.Data.msg+"</h3>");
+        }
+    },"json");
 }
 </script>

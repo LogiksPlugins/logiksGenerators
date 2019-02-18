@@ -1,0 +1,20 @@
+{
+	"guid":"global",
+	"menuid":"default",
+	"title":"Menu Name",
+	"mode":"*",
+	"category":"",
+	"menugroup":"Menu Group",
+	"class":"",
+	"target":"",
+	"link":"Menu Link",
+	"iconpath":"",
+	"tips":"",
+	"site":"*",
+	"device":"*",
+	"privilege":"*",
+  "rules":"",
+	"weight":1000,
+	"onmenu":true,
+	"blocked":false
+}

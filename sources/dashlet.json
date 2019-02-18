@@ -1,0 +1,21 @@
+{
+	"title":"Default Dashlet",
+	"descs":"your description goes here",
+	"photo":false,
+	"author":{
+		"name":"#SESS_USER_NAME#",
+		"email":"#SESS_USER_EMAIL#"
+	},
+	"market":{
+
+	},
+	"type":"php",
+	"source":"sourcefile.php",
+	"params":{
+		"autoOpen":true,
+		"spanClass":"span_1",
+		"style":"",
+		"styleContent":"text-align:center;",
+		"noheader":false
+	}
+}
