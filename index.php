@@ -35,9 +35,20 @@ printPageComponent(false,[
 	]);
 ?>
 <style>
-#sidebarArea .list-group-item {
-    cursor:pointer;
-}
+  #sidebarArea .list-group-item {
+      cursor:pointer;
+  }
+  .outputPath {
+    font-size: 12px;
+    margin-top: 20px;
+    text-align: center;
+  }
+  .outputPath:before {
+    content: "PATH: `";
+  }
+  .outputPath:after {
+    content: "`";
+  }
 </style>
 <script>
 $(function() {
@@ -58,7 +69,8 @@ function generateOutput() {
     $("#contentArea").html("<h3 align=center>Generating "+$("#sidebarArea .active").data("src")+"</h3><div class='text-center'><i class='fa fa-spinner fa-spin fa-2x'></i></div>");
     processAJAXPostQuery(_service("logiksGenerators","generate"), qData, function(ansData) {
         if(ansData.Data.status == "ok") {
-          $("#contentArea").html("<h3 align=center>Generating is complete, please refresh sidebar.</h3>");
+          if(ansData.Data.msg==null || ansData.Data.msg.length<=0) ansData.Data.msg = "Generating is complete, please refresh sidebar.";
+          $("#contentArea").html("<h3 align=center>"+ansData.Data.msg+"</h3><br><br><br><h5 class='text-center'><i class='fa fa-info-circle'></i> Refresh Sidebar</h5>");
         } else {
           if(ansData.Data.msg==null || ansData.Data.msg.length<=0) ansData.Data.msg = "Error generating source code"; 
           $("#contentArea").html("<h3 align=center>"+ansData.Data.msg+"</h3>");

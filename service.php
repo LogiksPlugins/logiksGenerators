@@ -1,52 +1,7 @@
 <?php
 if(!defined('ROOT')) exit('No direct script access allowed');
 
-$pluginArray = [
-            "dashlet"=>"/pluginsDev/dashlets/",
-            "widget"=>"/pluginsDev/widgets/",
-            "module"=>"/pluginsDev/modules/",
-            "service"=>"/services/",
-            "form"=>"/misc/forms/",
-            "report"=>"/misc/reports/",
-            "view"=>"/misc/views/",
-            "template"=>"/misc/templates/",
-            "style"=>"/css/",
-            "javascript"=>"/js/",
-            "config"=>"/config/",
-            "i18n"=>"/misc/i18n/",
-            "menuitem"=>"/misc/menu/apps/",
-        ];
-
-$pathPluginMap = [
-  "/plugins/modules/"=>["module"],
-  "/pluginsdev/modules/"=>["module"],
-  "/plugins/widgets/"=>["widget"],
-  "/pluginsdev/widgets/"=>["widget"],
-  "/plugins/dashlets/"=>["dashlet"],
-  "/pluginsdev/dashlets/"=>["dashlet"],
-  "/services/"=>["service"],
-  "/css/"=>["style"],
-  "/js/"=>["javascript"],
-  "/config/"=>["cfg"],
-  "/misc/forms/"=>["form"],
-  "/misc/reports/"=>["report"],
-  "/misc/templates/"=>["template"],
-  "/misc/views/"=>["view"],
-  "/misc/i18n/"=>["i18n"],
-  "/misc/menus/apps/"=>["menuitem"],
-  "/misc/menus/cms/"=>["menuitem"],
-  "/misc/menus/misc/"=>["menuitem"],
-];
-$templateArr = [
-      ".php",
-      ".js",
-      ".css",
-      ".cfg",
-      ".lst",
-      ".json",
-      ".inc",
-      ".ling",
-    ];
+include_once __DIR__."/config.php";
 
 switch ($_REQUEST['action']) {
     case "listforpath":
@@ -63,7 +18,7 @@ switch ($_REQUEST['action']) {
       }
     break;
     case "listplugins":
-        if($_REQUEST['format']=="list") {
+        if($_GET['format']=="list") {
             ksort($pluginArray);
             foreach($pluginArray as $f1=>$basePath) {
                 echo "<li class='list-group-item' data-src='{$f1}'>Generate ".toTitle(_ling($f1))." <i class='fa fa-chevron-right pull-right'></i></li>";
@@ -74,7 +29,7 @@ switch ($_REQUEST['action']) {
         break;
     case "form":
         if(isset($_REQUEST['src'])) {
-            generateForm($_REQUEST['src']);
+            generateForm($_REQUEST['src'],$pluginArray);
         } else {
             echo "Source Not Defined";
         }
@@ -89,6 +44,7 @@ switch ($_REQUEST['action']) {
                 return;
               }
             }
+            $_REQUEST['name'] = _slugify($_REQUEST['name']);
             $templatePath = __DIR__."/sources/".strtolower($_REQUEST['src']);
             foreach($templateArr as $a) {
               if(file_exists($templatePath.$a)) {
@@ -96,7 +52,7 @@ switch ($_REQUEST['action']) {
                 break;
               }
             }
-          
+
             if(file_exists($templatePath)) {
               $finalPath = str_replace('//',"/",CMS_APPROOT.$_REQUEST['path']);
               
@@ -116,7 +72,7 @@ switch ($_REQUEST['action']) {
                 if(!is_dir(dirname($finalPath))) mkdir(dirname($finalPath),0777,true);
                 
                 if(@copy($templatePath,$finalPath)) {
-                  printServiceMsg(["status"=>"ok","msg"=>"Successfully generated '{$_REQUEST['src']}'"]);
+                  printServiceMsg(["status"=>"ok","msg"=>"Successfully generated '{$_REQUEST['src']}'<br><p class='outputPath'>{".str_replace(CMS_APPROOT,"",$finalPath)."}</p>"]);
                 } else {
                   printServiceMsg(["msg"=>"Error generating '{$_REQUEST['src']}'"]);
                 }
@@ -125,8 +81,10 @@ switch ($_REQUEST['action']) {
                 if(file_exists($finalPath)) {
                   printServiceMsg(["msg"=>"{$_REQUEST['name']} already exists at '{$_REQUEST['path']}'"]);
                 } else {
+                  if(!is_dir(dirname($finalPath))) mkdir(dirname($finalPath),0777,true);
+                  
                   $a = copyFolder($templatePath,$finalPath);
-                  printServiceMsg(["status"=>"ok","msg"=>"Successfully generated '{$_REQUEST['src']}'"]);
+                  printServiceMsg(["status"=>"ok","msg"=>"Successfully generated '{$_REQUEST['src']}'<br><p class='outputPath'>".str_replace(CMS_APPROOT,"",$finalPath)."</p>"]);
                 }
               }
             } else {
@@ -166,7 +124,7 @@ function copyFolder($source, $dest, $overwrite = false,$basePath = ""){
 }
 
 
-function generateForm($src) {
+function generateForm($src,$pluginArray) {
     ?>
         <div class='row'>
             <br><br><br>
@@ -178,7 +136,16 @@ function generateForm($src) {
                     <input type="text" class="form-control" placeholder="Source Name" name='name' />
                   </div>
                   <div class="form-group col-md-6">
-                    
+                    <?php
+                      if(is_array($pluginArray[$src])) {
+                          echo "<label for='path'>Path</label>";
+                          echo "<select class='form-control select' name='path'>";
+                          foreach($pluginArray[$src] as $a=>$b) {
+                            echo "<option value='{$b}'>{$b}</option>";
+                          }
+                          echo "<select>";
+                      }
+                    ?>
                   </div>
                   <div class='col-md-12 text-center'>
                       <button type="button" class="btn btn-primary" onclick='generateOutput(this)'>Submit</button>

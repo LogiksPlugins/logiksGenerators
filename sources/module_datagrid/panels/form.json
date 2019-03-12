@@ -1,0 +1,28 @@
+{
+  "schema":"FORMS-1.0",
+	"source":{
+		"type":"sql",
+		"table":"table_name",
+		"where":["id"]
+	},
+	"fields": {
+		"id": {
+			"label": "ID",
+			"hidden":true
+		},
+		"name":{
+			"label":"Column Name",
+			"required":true
+		},
+		"blocked":{
+			"label":"Blocked",
+			"required":true,
+			"type":"select",
+			"options":{
+				"":false,
+				"true":"Blocked",
+				"false":"Not Blocked"
+			}
+		}
+	}
+}
