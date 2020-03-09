@@ -7,4 +7,4 @@ if(!function_exists("someNewFunc")) {
     
   }
 }
-?
+?>

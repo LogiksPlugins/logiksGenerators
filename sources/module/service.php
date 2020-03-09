@@ -1,10 +1,11 @@
 <?php
 if(!defined('ROOT')) exit('No direct script access allowed');
-checkServiceAccess();
+//checkServiceAccess();
 
-switch($_REQUEST['action']) {
-  case "do-something":
-    //Write your service execution code here
-  break;
+handleActionMethodCalls();
+
+function _service_list() {
+    
+    return [];
 }
 ?>
