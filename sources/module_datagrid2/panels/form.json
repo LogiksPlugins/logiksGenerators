@@ -1,0 +1,80 @@
+{
+	"hooks": {
+		"preload": {
+			"helpers": ["countries"]
+		},
+		"presubmit": {
+		    "modules":["bizrules"]
+		},
+		"postsubmit": {
+		    "modules":["bizflow","bizlogger"]
+		}
+	},
+	"source": {
+		"type": "sql",
+		"table": "user_bookmarks",
+		"where": ["md5(id)"]
+	},
+	"forcefill" : {
+	    "groupuid":"#SESS_GROUP_NAME#",
+        "access_level":"#SESS_ACCESS_LEVEL#",
+        "privilegeid":"#SESS_PRIVILEGE_ID#",
+        "guid":"#SESS_GUID#"
+	},
+	"gotolink":"infoview/form/{hashid}?",
+	"fields": {
+		"link_uri": {
+			"label": "Link URL",
+			"type":"url",
+			"group": "Info",
+			"required":true,
+			"width": 12
+		},
+	  "title": {
+			"label": "Title",
+			"group": "Info",
+			"required":true
+		},
+		"category":{
+			"label": "Category",
+			"type": "suggest",
+			"group": "Info",
+			"required":true,
+			"autocomplete":true
+		},
+		"remarks": {
+			"label": "Remarks",
+			"type":"textarea",
+			"group": "Info"
+		},
+		"shared_with":{
+			"label": "Shared With",
+			"type": "dataSelectorFromTable",
+			"table": "profiletbl",
+			"columns": "full_name as title,loginid as value",
+			"where": {
+				"type": "employee",
+				"subtype":"Active"
+			},
+			"group": "Info",
+			"multiple":true,
+			"required":true
+			}
+	},
+	"infoview": {
+		"groups": {
+			"info": {
+				"label": "Info",
+				"type": "module",
+				"src": "infoviewTable",
+				"vmode": "view",
+				"config": {
+					"type": "sql",
+					"table": "user_bookmarks",
+					"cols": "id,title,remarks,link_uri,created_by,created_on,edited_by,edited_on"
+				},
+				"width": 12
+			}
+		}
+	}
+}

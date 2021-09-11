@@ -1,0 +1,83 @@
+{
+	"schema": "1.0",
+	"title": "Bookmarks",
+	"category": "Tools",
+	"privilege": "*",
+	"blocked": false,
+	"rowlink": false,
+	"rowsPerPage": 20,
+	"showExtraColumn": false,
+	"custombar": false,
+	"hooks": {
+		"fieldupdate": {
+		    "modules":["bizflow","bizlogger"]
+		}
+	},
+	"source": {
+		"type": "sql",
+		"table": "user_bookmarks",
+		"cols": "id,title,category,remarks,link_uri,shared_with,created_by,created_on,edited_by,edited_on",
+		"where": {
+			"(shared_with ='*' OR shared_with like '%#SESS_USER_ID#%' OR ((shared_with ='' OR shared_with IS NULL) AND created_by='#SESS_USER_ID#'))":"RAW"
+	
+		},
+		"limit": 20
+	},
+	"buttons": {
+	   
+	},
+	"datagrid": {
+		"id": {
+			"label": "ID",
+			"hidden": false,
+			"searchable": true,
+			"sortable": true,
+			"groupable": false,
+			"classes": "",
+			"style": "width:50px;",
+			"formatter": "text"
+		},
+		"title": {
+			"label": "Title",
+			"sortable": true,
+			"searchable": true
+		},
+		"category":{
+			"label": "Category",
+			"sortable": true,
+			"searchable": true
+		},
+		"remarks": {
+			"label": "Remarks",
+			"sortable": true,
+			"hidden": true,
+			"searchable": true
+		},
+		"link_uri": {
+			"label": "Link URL",
+			"sortable": true,
+			"hidden": false,
+			"searchable": true,
+			"formatter":"url"
+		},
+		"shared_with":{
+			"label": "Share",
+			"sortable": true,
+			"hidden": false,
+			"searchable": true
+		},
+		"edited_by": {
+			"label": "Updated By",
+			"sortable": true,
+			"searchable": true,
+			"hidden": true
+		},
+		"edited_on": {
+			"label": "Last Update",
+			"formatter":"date",
+			"sortable": true,
+			"searchable": true,
+			"hidden": true
+		}
+	}
+}
