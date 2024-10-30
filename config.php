@@ -52,4 +52,21 @@ $templateArr = [
       ".inc",
       ".ling",
     ];
+    
+$pluginForm = [
+    //     "dashlet"=>[
+    //         "target"=> [
+    // 			"label"=> "Target",
+    // 			"group"=> "Admin",
+    // 			"type"=> "select",
+    // 			"options"=> [
+    // 				"blank"=> "blank",
+    // 				"_blank"=> "_blank",
+    // 				"_parent"=> "_parent",
+    // 				"_self"=> "_self",
+    // 				"_top"=> "_top"
+    // 			]
+    // 		]
+    //     ],
+    ];
 ?>

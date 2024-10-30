@@ -29,9 +29,16 @@ switch ($_REQUEST['action']) {
         break;
     case "form":
         if(isset($_REQUEST['src'])) {
-            generateForm($_REQUEST['src'],$pluginArray);
+            generateForm($_REQUEST['src'], $pluginArray, $pluginForm);
         } else {
             echo "Source Not Defined";
+        }
+        break;
+    case "generate2":
+        if(isset($_REQUEST['name']) && isset($_REQUEST['src'])) {
+            
+        } else {
+            printServiceMsg(["msg"=>"Generate What?"]);
         }
         break;
     case "generate":
@@ -72,7 +79,7 @@ switch ($_REQUEST['action']) {
                 if(!is_dir(dirname($finalPath))) mkdir(dirname($finalPath),0777,true);
                 
                 if(@copy($templatePath,$finalPath)) {
-                  printServiceMsg(["status"=>"ok","msg"=>"Successfully generated '{$_REQUEST['src']}'<br><p class='outputPath'>{".str_replace(CMS_APPROOT,"",$finalPath)."}</p>"]);
+                  printServiceMsg(["status"=>"ok","msg"=>"Successfully generated '".$_REQUEST['src']."'<br><p class='outputPath'>{".str_replace(CMS_APPROOT,"",$finalPath)."}</p>"]);
                 } else {
                   printServiceMsg(["msg"=>"Error generating '{$_REQUEST['src']}'"]);
                 }
@@ -124,10 +131,14 @@ function copyFolder($source, $dest, $overwrite = false,$basePath = ""){
 }
 
 
-function generateForm($src,$pluginArray) {
+function generateForm($src, $pluginArray, $pluginForm) {
+        $advPath = __DIR__."/generators/{$src}.php";
+        if(file_exists($advPath)) {
+            include_once $advPath;
+        } else {
     ?>
         <div class='row'>
-            <br><br><br>
+            <br><br>
             <div class="col-md-8 col-md-offset-2">
                 <form id='generatorForm'>
                   <input type='hidden' name='src' value='<?=$src?>' />
@@ -147,6 +158,20 @@ function generateForm($src,$pluginArray) {
                       }
                     ?>
                   </div>
+                  <?php
+                      if(is_array($pluginForm[$src])) {
+                          loadModuleLib("forms", "api");
+                          foreach($pluginForm[$src]  as $k=>$field) {
+                              $field['fieldkey'] = $k;
+                              if(!isset($field['label'])) $field['label'] = toTitle($k);
+                              
+                              echo '<div class="form-group col-md-6">';
+                              echo "<label for='{$k}'>{$field['label']}</label>";
+                              echo getFormField($field,[],"app");
+                              echo '</div>';
+                          }
+                      }
+                  ?>
                   <div class='col-md-12 text-center'>
                       <button type="button" class="btn btn-primary" onclick='generateOutput(this)'>Submit</button>
                   </div>
@@ -154,5 +179,6 @@ function generateForm($src,$pluginArray) {
             </div>
         </div>
     <?php
+        }
 }
 ?>

@@ -59,7 +59,7 @@
 			"group": "Info",
 			"multiple":true,
 			"required":true
-			}
+		}
 	},
 	"infoview": {
 		"groups": {
